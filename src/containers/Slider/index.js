@@ -10,12 +10,16 @@ const Slider = () => {
   const byDateDesc = data?.focus.sort((evtA, evtB) =>
     new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
   );
+  // Correction du bug "image blanche" :
+  // Empêche l'index de dépasser la longueur du tableau 'focus'.
+  // Utilisation de l'opérateur modulo pour revenir à 0 automatiquement.   
   const nextCard = () => {
     setTimeout(
-      () => setIndex(index < byDateDesc.length ? index + 1 : 0),
+      () => setIndex((index + 1) % byDateDesc.length),
       5000
     );
   };
+
   useEffect(() => {
     nextCard();
   });
@@ -25,9 +29,8 @@ const Slider = () => {
         <>
           <div
             key={event.title}
-            className={`SlideCard SlideCard--${
-              index === idx ? "display" : "hide"
-            }`}
+            className={`SlideCard SlideCard--${index === idx ? "display" : "hide"
+              }`}
           >
             <img src={event.cover} alt="forum" />
             <div className="SlideCard__descriptionContainer">
