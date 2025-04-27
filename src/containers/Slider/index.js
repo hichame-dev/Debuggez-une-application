@@ -7,9 +7,13 @@ import "./style.scss";
 const Slider = () => {
   const { data } = useData();
   const [index, setIndex] = useState(0);
-  const byDateDesc = data?.focus.sort((evtA, evtB) =>
-    new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
+  const byDateDesc = data?.focus?.sort(
+    // Correction : Tri des événements du plus récent au plus ancien sans duplication de tableau.
+    // Résultat : janvier (ancien) sera affiché en dernier dans le slider.
+    (evtA, evtB) => new Date(evtB.date) - new Date(evtA.date)
   );
+
+  
   // Correction du bug "image blanche" :
   // Empêche l'index de dépasser la longueur du tableau 'focus'.
   // Utilisation de l'opérateur modulo pour revenir à 0 automatiquement.   
