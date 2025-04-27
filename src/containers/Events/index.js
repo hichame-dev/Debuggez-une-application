@@ -16,7 +16,7 @@ const EventList = () => {
   const filteredEvents = (
     (!type
       ? data?.events
-      : data?.events) || []
+      : data?.events.filter((event) => event.type === type)) || []
   ).filter((event, index) => {
     if (
       (currentPage - 1) * PER_PAGE <= index &&
@@ -26,6 +26,7 @@ const EventList = () => {
     }
     return false;
   });
+
   const changeType = (evtType) => {
     setCurrentPage(1);
     setType(evtType);
@@ -48,13 +49,16 @@ const EventList = () => {
             {filteredEvents.map((event) => (
               <Modal key={event.id} Content={<ModalEvent event={event} />}>
                 {({ setIsOpened }) => (
-                  <EventCard
+                  // Correction : ajout de imageAlt pour éviter l'erreur PropTypes (imageAlt attendu dans EventCard).
+                    <EventCard
                     onClick={() => setIsOpened(true)}
                     imageSrc={event.cover}
+                    imageAlt={event.title} // ← Correction ajoutée ici pour éviter l'erreur PropTypes
                     title={event.title}
                     date={new Date(event.date)}
                     label={event.type}
                   />
+
                 )}
               </Modal>
             ))}

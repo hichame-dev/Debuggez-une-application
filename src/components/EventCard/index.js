@@ -27,7 +27,8 @@ const EventCard = ({
       </div>
     </div>
   );
-
+// ATTENTION : imageSrc est obligatoire. Si non fourni depuis le composant parent, 
+// une erreur s'affichera dans la console (PropTypes warning).
 EventCard.propTypes = {
   imageSrc: PropTypes.string.isRequired,
   imageAlt: PropTypes.string,
