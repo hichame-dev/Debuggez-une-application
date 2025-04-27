@@ -17,7 +17,7 @@ export const api = {
 };
 // Correction ajoutée pour fournir "last" (la dernière prestation)
 // Objectif : calculer l'événement le plus récent par date
-// et le rendre disponible dans le contexte pour le footer (et ailleurs si besoin).
+// et le rendre disponible dans le contexte pour le footer .
 // Cela évite que le footer affiche une image blanche ou des valeurs undefined.
 export const DataProvider = ({ children }) => {
   const [error, setError] = useState(null);
