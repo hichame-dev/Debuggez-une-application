@@ -18,11 +18,13 @@ const Slider = () => {
   // Empêche l'index de dépasser la longueur du tableau 'focus'.
   // Utilisation de l'opérateur modulo pour revenir à 0 automatiquement.   
   const nextCard = () => {
-    setTimeout(
-      () => setIndex((index + 1) % byDateDesc.length),
-      5000
-    );
+    setTimeout(() => {
+      if (byDateDesc?.length) {
+        setIndex((index + 1) % byDateDesc.length);
+      }
+    }, 5000);
   };
+
 
   useEffect(() => {
     nextCard();
@@ -30,12 +32,8 @@ const Slider = () => {
   return (
     <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
-        <>
-          <div
-            key={event.title}
-            className={`SlideCard SlideCard--${index === idx ? "display" : "hide"
-              }`}
-          >
+        <div key={event.title}>
+          <div className={`SlideCard SlideCard--${index === idx ? "display" : "hide"}`}>
             <img src={event.cover} alt="forum" />
             <div className="SlideCard__descriptionContainer">
               <div className="SlideCard__description">
@@ -45,6 +43,7 @@ const Slider = () => {
               </div>
             </div>
           </div>
+        
           <div className="SlideCard__paginationContainer">
             <div className="SlideCard__pagination">
               {byDateDesc.map((eventRadio, indexRadio) => (
@@ -56,10 +55,9 @@ const Slider = () => {
                   onChange={() => { }}
                 />
               ))}
-
             </div>
           </div>
-        </>
+        </div>
       ))}
     </div>
   );
