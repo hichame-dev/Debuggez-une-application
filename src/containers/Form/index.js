@@ -16,6 +16,7 @@ const Form = ({ onSuccess, onError }) => {
       try {
         await mockContactApi();
         setSending(false);
+        onSuccess();        // Ajout ici pour indiquer le succès
       } catch (err) {
         setSending(false);
         onError(err);

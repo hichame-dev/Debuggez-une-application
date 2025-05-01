@@ -29,15 +29,26 @@ describe("When Form is created", () => {
 
 
 describe("When a page is created", () => {
-  it("a list of events is displayed", () => {
-    // to implement
-  })
-  it("a list a people is displayed", () => {
-    // to implement
-  })
-  it("a footer is displayed", () => {
-    // to implement
-  })
+  // Vérifie que la section "Nos réalisations" (événements) est bien affichée sur la page
+  it("a list of events is displayed", async () => {
+    render(<Home />);        
+    const eventsSections = await screen.findAllByText(/nos réalisations/i);
+    expect(eventsSections.length).toBeGreaterThan(0);
+  });
+
+  // Vérifie que la section "Notre équipe" (people) est bien affichée sur la page
+  it("a list of people is displayed", async () => {
+    render(<Home />);
+    const peopleSections = await screen.findAllByText(/notre équipe/i);
+    expect(peopleSections.length).toBeGreaterThan(0);
+  });
+  
+  // Vérifie que le footer de la page est bien présent avec le texte "Contactez-nous"
+  it("a footer is displayed", async () => {
+    render(<Home />);
+    const contactFooter = await screen.findByText(/contactez-nous/i);
+    expect(contactFooter).toBeInTheDocument();
+  });
   it("an event card, with the last event, is displayed", () => {
     // to implement
   })

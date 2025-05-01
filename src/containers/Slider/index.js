@@ -7,27 +7,38 @@ import "./style.scss";
 const Slider = () => {
   const { data } = useData();
   const [index, setIndex] = useState(0);
-  const byDateDesc = data?.focus.sort((evtA, evtB) =>
-    new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
+  const byDateDesc = data?.focus?.sort(
+    // Correction : Tri des événements du plus récent au plus ancien sans duplication de tableau.
+    // Résultat : janvier (ancien) sera affiché en dernier dans le slider.
+    (evtA, evtB) => new Date(evtB.date) - new Date(evtA.date)
   );
-  const nextCard = () => {
-    setTimeout(
-      () => setIndex(index < byDateDesc.length ? index + 1 : 0),
-      5000
-    );
-  };
+
+  
+  
   useEffect(() => {
-    nextCard();
-  });
+    // ✅ Vérifie si les données 'byDateDesc' sont bien chargées et non vides
+    // 🛡️ Cela évite l'erreur 'Cannot read properties of undefined (reading length)'
+    if (!byDateDesc || byDateDesc.length === 0) return;
+
+    // 🔁 Lance une boucle toutes les 5 secondes pour faire défiler les slides
+    // 💡 On utilise un setInterval ici pour un défilement automatique fluide
+    const interval = setInterval(() => {
+      setIndex((prevIndex) => (prevIndex + 1) % byDateDesc.length);
+    }, 5000);
+
+    // 🧹 Nettoyage du setInterval pour éviter les effets indésirables ou les fuites mémoire
+    return () => clearInterval(interval);
+  }, [byDateDesc]);
+
+  
+
+  
   return (
     <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
-        <>
+        <div key={`slide-${event.title}`}>
           <div
-            key={event.title}
-            className={`SlideCard SlideCard--${
-              index === idx ? "display" : "hide"
-            }`}
+            className={`SlideCard SlideCard--${index === idx ? "display" : "hide"}`}
           >
             <img src={event.cover} alt="forum" />
             <div className="SlideCard__descriptionContainer">
@@ -38,22 +49,24 @@ const Slider = () => {
               </div>
             </div>
           </div>
+
           <div className="SlideCard__paginationContainer">
             <div className="SlideCard__pagination">
-              {byDateDesc.map((_, radioIdx) => (
+              {byDateDesc.map((eventRadio, indexRadio) => (
                 <input
-                  key={`${event.id}`}
+                  key={`radio-${eventRadio.title}`}
                   type="radio"
                   name="radio-button"
-                  checked={idx === radioIdx}
+                  checked={index === indexRadio}
+                  onChange={() => { }}
                 />
               ))}
             </div>
           </div>
-        </>
-      ))}
-    </div>
-  );
+        </div>
+    ))}
+  </div>
+);
 };
 
 export default Slider;
