@@ -14,27 +14,31 @@ const Slider = () => {
   );
 
   
-  // Correction du bug "image blanche" :
-  // Empêche l'index de dépasser la longueur du tableau 'focus'.
-  // Utilisation de l'opérateur modulo pour revenir à 0 automatiquement.   
-  const nextCard = () => {
-    setTimeout(
-      () => setIndex((index + 1) % byDateDesc.length),
-      5000
-    );
-  };
-
+  
   useEffect(() => {
-    nextCard();
-  });
+    // ✅ Vérifie si les données 'byDateDesc' sont bien chargées et non vides
+    // 🛡️ Cela évite l'erreur 'Cannot read properties of undefined (reading length)'
+    if (!byDateDesc || byDateDesc.length === 0) return;
+
+    // 🔁 Lance une boucle toutes les 5 secondes pour faire défiler les slides
+    // 💡 On utilise un setInterval ici pour un défilement automatique fluide
+    const interval = setInterval(() => {
+      setIndex((prevIndex) => (prevIndex + 1) % byDateDesc.length);
+    }, 5000);
+
+    // 🧹 Nettoyage du setInterval pour éviter les effets indésirables ou les fuites mémoire
+    return () => clearInterval(interval);
+  }, [byDateDesc]);
+
+  
+
+  
   return (
     <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
-        <>
+        <div key={`slide-${event.title}`}>
           <div
-            key={event.title}
-            className={`SlideCard SlideCard--${index === idx ? "display" : "hide"
-              }`}
+            className={`SlideCard SlideCard--${index === idx ? "display" : "hide"}`}
           >
             <img src={event.cover} alt="forum" />
             <div className="SlideCard__descriptionContainer">
@@ -45,6 +49,7 @@ const Slider = () => {
               </div>
             </div>
           </div>
+
           <div className="SlideCard__paginationContainer">
             <div className="SlideCard__pagination">
               {byDateDesc.map((eventRadio, indexRadio) => (
@@ -56,13 +61,12 @@ const Slider = () => {
                   onChange={() => { }}
                 />
               ))}
-
             </div>
           </div>
-        </>
-      ))}
-    </div>
-  );
+        </div>
+    ))}
+  </div>
+);
 };
 
 export default Slider;
