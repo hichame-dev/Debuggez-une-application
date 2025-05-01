@@ -13,12 +13,11 @@ const Slider = () => {
     (evtA, evtB) => new Date(evtB.date) - new Date(evtA.date)
   );
 
-  
-  
+
   useEffect(() => {
     // ✅ Vérifie si les données 'byDateDesc' sont bien chargées et non vides
     // 🛡️ Cela évite l'erreur 'Cannot read properties of undefined (reading length)'
-    if (!byDateDesc || byDateDesc.length === 0) return;
+    if (!byDateDesc || byDateDesc.length === 0) return undefined;
 
     // 🔁 Lance une boucle toutes les 5 secondes pour faire défiler les slides
     // 💡 On utilise un setInterval ici pour un défilement automatique fluide
@@ -30,9 +29,11 @@ const Slider = () => {
     return () => clearInterval(interval);
   }, [byDateDesc]);
 
-  
 
-  
+
+
+
+
   return (
     <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
@@ -64,9 +65,9 @@ const Slider = () => {
             </div>
           </div>
         </div>
-    ))}
-  </div>
-);
+      ))}
+    </div>
+  );
 };
 
 export default Slider;
