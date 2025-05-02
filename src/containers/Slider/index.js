@@ -7,32 +7,40 @@ import "./style.scss";
 const Slider = () => {
   const { data } = useData();
   const [index, setIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false); // 🆕 État qui contrôle la pause du slider
+
   const byDateDesc = data?.focus?.sort(
-    // Correction : Tri des événements du plus récent au plus ancien sans duplication de tableau.
-    // Résultat : janvier (ancien) sera affiché en dernier dans le slider.
+    // ⏱️ Tri des événements du plus récent au plus ancien
     (evtA, evtB) => new Date(evtB.date) - new Date(evtA.date)
   );
 
-
   useEffect(() => {
-    // ✅ Vérifie si les données 'byDateDesc' sont bien chargées et non vides
-    // 🛡️ Cela évite l'erreur 'Cannot read properties of undefined (reading length)'
-    if (!byDateDesc || byDateDesc.length === 0) return undefined;
+    if (!byDateDesc || byDateDesc.length === 0 || isPaused) {
+      //  Pas de défilement = on retourne une fonction vide
+      return () => { };
+    }
 
-    // 🔁 Lance une boucle toutes les 5 secondes pour faire défiler les slides
-    // 💡 On utilise un setInterval ici pour un défilement automatique fluide
     const interval = setInterval(() => {
       setIndex((prevIndex) => (prevIndex + 1) % byDateDesc.length);
     }, 5000);
 
-    // 🧹 Nettoyage du setInterval pour éviter les effets indésirables ou les fuites mémoire
+    // 🧹 Nettoyage de l'intervalle à chaque re-render
     return () => clearInterval(interval);
-  }, [byDateDesc]);
+  }, [byDateDesc, isPaused]);
 
 
+  useEffect(() => {
+    // 🎹 Ajoute un écouteur pour mettre en pause/reprendre avec la barre espace
+    const handleKeyDown = (e) => {
+      if (e.code === "Space") {
+        e.preventDefault(); // 🚫 Empêche le scroll de la page quand on appuie sur espace
+        setIsPaused((prev) => !prev); // ⏯️ Bascule entre lecture/pause
+      }
+    };
 
-
-
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown); // 🧼 Nettoyage
+  }, []);
 
   return (
     <div className="SlideCardList">
