@@ -9,42 +9,38 @@ const Slider = () => {
   const [index, setIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false); // 🆕 État qui contrôle la pause du slider
 
-  const byDateDesc = data?.focus?.sort(
-    // ⏱️ Tri des événements du plus récent au plus ancien
-    (evtA, evtB) => new Date(evtB.date) - new Date(evtA.date)
+  const byDateAsc = data?.focus?.sort(
+    // ⏱️ Tri des événements du plus ancien au plus récent
+    (evtA, evtB) => new Date(evtA.date) - new Date(evtB.date)
   );
 
   useEffect(() => {
-    if (!byDateDesc || byDateDesc.length === 0 || isPaused) {
-      //  Pas de défilement = on retourne une fonction vide
+    if (!byDateAsc || byDateAsc.length === 0 || isPaused) {
       return () => { };
     }
 
     const interval = setInterval(() => {
-      setIndex((prevIndex) => (prevIndex + 1) % byDateDesc.length);
+      setIndex((prevIndex) => (prevIndex + 1) % byDateAsc.length);
     }, 5000);
 
-    // 🧹 Nettoyage de l'intervalle à chaque re-render
     return () => clearInterval(interval);
-  }, [byDateDesc, isPaused]);
-
+  }, [byDateAsc, isPaused]);
 
   useEffect(() => {
-    // 🎹 Ajoute un écouteur pour mettre en pause/reprendre avec la barre espace
     const handleKeyDown = (e) => {
       if (e.code === "Space") {
-        e.preventDefault(); // 🚫 Empêche le scroll de la page quand on appuie sur espace
-        setIsPaused((prev) => !prev); // ⏯️ Bascule entre lecture/pause
+        e.preventDefault();
+        setIsPaused((prev) => !prev);
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown); // 🧼 Nettoyage
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   return (
     <div className="SlideCardList">
-      {byDateDesc?.map((event, idx) => (
+      {byDateAsc?.map((event, idx) => (
         <div key={`slide-${event.title}`}>
           <div
             className={`SlideCard SlideCard--${index === idx ? "display" : "hide"}`}
@@ -61,7 +57,7 @@ const Slider = () => {
 
           <div className="SlideCard__paginationContainer">
             <div className="SlideCard__pagination">
-              {byDateDesc.map((eventRadio, indexRadio) => (
+              {byDateAsc.map((eventRadio, indexRadio) => (
                 <input
                   key={`radio-${eventRadio.title}`}
                   type="radio"
