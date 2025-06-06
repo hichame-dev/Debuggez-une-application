@@ -43,7 +43,7 @@ ModalEvent.propTypes = {
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     nb_guesses: PropTypes.number.isRequired,
-    periode: PropTypes.string.isRequired, // ✅ indispensable pour que le test passe
+    periode: PropTypes.string.isRequired, 
     prestations: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
 };
