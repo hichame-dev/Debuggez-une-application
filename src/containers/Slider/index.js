@@ -10,7 +10,7 @@ const Slider = () => {
   const [isPaused, setIsPaused] = useState(false); // 🆕 État qui contrôle la pause du slider
 
   const byDateAsc = data?.focus?.sort(
-    // ⏱️ Tri des événements du plus ancien au plus récent
+    // ⏱ Tri des événements du plus ancien au plus récent
     (evtA, evtB) => new Date(evtA.date) - new Date(evtB.date)
   );
 
